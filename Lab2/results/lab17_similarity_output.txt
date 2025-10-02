@@ -1,0 +1,34 @@
+--- Top 5 Similar Documents ---
+Reference Document: Beginners BBQ Class Taking Place in Missoula!
+Do you want to get better at making delicious BBQ? You...
+
+Top 5 Similar Documents:
+================================================================================
+Text: The rich get richer and the poor get poorer eh?
+Or is it the rich think different and play by a diff...
+Cosine Similarity: 0.0159
+================================================================================
+
+================================================================================
+Text: How many backlinks per day for new site?
+Discussion in 'Black Hat SEO' started by Omoplata, Dec 3, 2...
+Cosine Similarity: 0.0104
+================================================================================
+
+================================================================================
+Text: Biomedics 1 Day Extra are daily replacement disposable contact lenses by CooperVision Hydron. Buy on...
+Cosine Similarity: 0.0096
+================================================================================
+
+================================================================================
+Text: Discussion in 'Mac OS X Lion (10.7)' started by axboi87, Jan 20, 2012.
+I've got a 500gb internal dri...
+Cosine Similarity: 0.0081
+================================================================================
+
+================================================================================
+Text: Foil plaid lycra and spandex shortall with metallic slinky insets. Attached metallic elastic belt wi...
+Cosine Similarity: 0.0071
+================================================================================
+
+Output file generated at: D:\NLP\Lab2\spark_labs\..\results\lab17_similarity_output.txt

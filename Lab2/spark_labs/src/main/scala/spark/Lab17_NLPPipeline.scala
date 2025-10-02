@@ -2,8 +2,9 @@ package spark
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.feature.{HashingTF, IDF, RegexTokenizer, StopWordsRemover, Tokenizer}
+import org.apache.spark.ml.feature.{HashingTF, IDF, RegexTokenizer, StopWordsRemover, Normalizer}
 import org.apache.spark.sql.functions._
+import org.apache.spark.ml.linalg.{Vector, Vectors}
 import java.io.{File, PrintWriter}
 // import com.harito.spark.Utils._
 
@@ -21,12 +22,14 @@ object Lab17_NLPPipeline {
     Thread.sleep(10000)
 
     // 1. --- Read Dataset ---
+    val readStartTime = System.nanoTime()
     val dataPath = "D:/NLP/data/c4-train.00000-of-01024-30K.json.gz"
-    val initialDF = spark.read.json(dataPath).limit(1000) // Limit for faster processing during lab
-    println(s"Successfully read ${initialDF.count()} records.")
+    val initialDF = spark.read.json(dataPath).limit(args(0).toInt) // Limit for faster processing during lab
+    val readDuration = (System.nanoTime() - readStartTime) / 1e9d
+    println(f"--> Reading ${initialDF.count()} records took $readDuration%.2f seconds.")
     initialDF.printSchema()
     println("\nSample of initial DataFrame:")
-    initialDF.show(5, truncate = false) // Show full content for better understanding
+    initialDF.show(5, truncate = false)
 
     // --- Pipeline Stages Definition ---
 
@@ -66,9 +69,19 @@ object Lab17_NLPPipeline {
       .setInputCol(hashingTF.getOutputCol)
       .setOutputCol("features")
 
-    // 6. --- Assemble the Pipeline ---
+    // // 6. --- Assemble the Pipeline ---
+    // val pipeline = new Pipeline()
+    //   .setStages(Array(tokenizer, stopWordsRemover, hashingTF, idf))
+    
+    // 6. --- Normalization ---
+    val normalizer = new Normalizer()
+      .setInputCol(idf.getOutputCol)
+      .setOutputCol("normalized_features")
+      .setP(2.0) // L2 normalization (Euclidean norm)
+
+    // 7. --- Assemble the Pipeline ---
     val pipeline = new Pipeline()
-      .setStages(Array(tokenizer, stopWordsRemover, hashingTF, idf))
+      .setStages(Array(tokenizer, stopWordsRemover, hashingTF, idf, normalizer))
 
     // --- Time the main operations ---
 
@@ -87,19 +100,22 @@ object Lab17_NLPPipeline {
     println(f"--> Data transformation of $transformCount records took $transformDuration%.2f seconds.")
 
     // Calculate actual vocabulary size after tokenization and stop word removal
+    val vocabStartTime = System.nanoTime()
     val actualVocabSize = transformedDF
       .select(explode($"filtered_tokens").as("word"))
-      .filter(length($"word") > 1) // Filter out single-character tokens
+      .filter(length($"word") > 1)
       .distinct()
       .count()
+    val vocabDuration = (System.nanoTime() - vocabStartTime) / 1e9d
+    println(f"--> Calculating vocabulary size took $vocabDuration%.2f seconds.")
     println(s"--> Actual vocabulary size after tokenization and stop word removal: $actualVocabSize unique terms.")
 
     // --- Show and Save Results ---
     println("\nSample of transformed data:") // Fix: Ensure single-line string literal
-    transformedDF.select("text", "features").show(5, truncate = 50)
+    transformedDF.select("text", "normalized_features").show(5, truncate = 50)
 
     val n_results = 20
-    val results = transformedDF.select("text", "features").take(n_results)
+    val results = transformedDF.select("text", "features", "normalized_features").take(n_results)
 
     // 7. --- Write Metrics and Results to Separate Files ---
 
@@ -109,8 +125,10 @@ object Lab17_NLPPipeline {
     val logWriter = new PrintWriter(new File(log_path))
     try {
       logWriter.println("--- Performance Metrics ---")
+      logWriter.println(f"Data reading duration: $readDuration%.2f seconds")
       logWriter.println(f"Pipeline fitting duration: $fitDuration%.2f seconds")
       logWriter.println(f"Data transformation duration: $transformDuration%.2f seconds")
+      logWriter.println(f"Vocabulary size calculation duration: $vocabDuration%.2f seconds")
       logWriter.println(s"Actual vocabulary size (after preprocessing): $actualVocabSize unique terms")
       logWriter.println(s"HashingTF numFeatures set to: 20000")
       if (20000 < actualVocabSize) {
@@ -133,9 +151,11 @@ object Lab17_NLPPipeline {
       results.foreach { row =>
         val text = row.getAs[String]("text")
         val features = row.getAs[org.apache.spark.ml.linalg.Vector]("features")
+        val n_features = row.getAs[Vector]("normalized_features")
         resultWriter.println("="*80)
         resultWriter.println(s"Original Text: ${text.substring(0, Math.min(text.length, 100))}...")
         resultWriter.println(s"TF-IDF Vector: ${features.toString}")
+        resultWriter.println(s"Normalized TF-IDF Vector: ${n_features.toString}")
         resultWriter.println("="*80)
         resultWriter.println()
       }
@@ -143,6 +163,77 @@ object Lab17_NLPPipeline {
     } finally {
       resultWriter.close()
     }
+
+    // --- Find Similar Documents ---
+    println("\nFinding similar documents...")
+    val similarityStartTime = System.nanoTime()
+
+    // Select a random document (first document for simplicity) and ensure it has valid features
+    val referenceDocOption = transformedDF
+      .select("text", "normalized_features")
+      .filter($"normalized_features".isNotNull)
+      .first()
+
+    if (referenceDocOption == null) {
+      println("Error: No valid reference document found with non-null features.")
+    } else {
+      val referenceText = referenceDocOption.getAs[String]("text")
+      val referenceVector = referenceDocOption.getAs[Vector]("normalized_features")
+
+      // Create a single-row DataFrame for the reference vector
+      val referenceDF = Seq((referenceText, referenceVector)).toDF("ref_text", "ref_features")
+
+      // Define cosine similarity UDF
+      val cosineSimilarityUDF = udf { (v1: Vector, v2: Vector) =>
+        if (v1 == null || v2 == null) {
+          0.0 // Return 0 similarity for null vectors
+        } else {
+          val dotProduct = v1.toArray.zip(v2.toArray).map { case (x, y) => x * y }.sum
+          dotProduct // Since vectors are L2-normalized, dot product equals cosine similarity
+        }
+      }
+
+      // Cross join to compare reference vector with all documents
+      val similarities = transformedDF
+        .crossJoin(referenceDF)
+        .withColumn("similarity", cosineSimilarityUDF($"normalized_features", $"ref_features"))
+        .select($"text", $"similarity")
+        .filter($"similarity".isNotNull && $"text" =!= referenceText) // Exclude reference document
+        .orderBy($"similarity".desc)
+        .limit(5) // Get top 5 similar documents
+
+      // Show top 5 similar documents
+      println("\nReference Document:")
+      println(s"Text: ${referenceText.substring(0, Math.min(referenceText.length, 100))}...")
+      println("\nTop 5 Similar Documents:")
+      similarities.show(5, truncate = 50)
+
+      // Write similarity results to file
+      val similarityResultPath = "../results/lab17_similarity_output.txt"
+      new File(similarityResultPath).getParentFile.mkdirs()
+      val similarityWriter = new PrintWriter(new File(similarityResultPath))
+      try {
+        similarityWriter.println("--- Top 5 Similar Documents ---")
+        similarityWriter.println(s"Reference Document: ${referenceText.substring(0, Math.min(referenceText.length, 100))}...")
+        similarityWriter.println("\nTop 5 Similar Documents:")
+        similarities.collect().foreach { row =>
+          val text = row.getAs[String]("text")
+          val similarity = row.getAs[Double]("similarity")
+          similarityWriter.println("="*80)
+          similarityWriter.println(s"Text: ${text.substring(0, Math.min(text.length, 100))}...")
+          similarityWriter.println(f"Cosine Similarity: $similarity%.4f")
+          similarityWriter.println("="*80)
+          similarityWriter.println()
+        }
+        similarityWriter.println(s"Output file generated at: ${new File(similarityResultPath).getAbsolutePath}")
+        println(s"Successfully wrote similarity results to $similarityResultPath")
+      } finally {
+        similarityWriter.close()
+      }
+    }
+
+    val similarityDuration = (System.nanoTime() - similarityStartTime) / 1e9d
+    println(f"--> Finding similar documents took $similarityDuration%.2f seconds.")
 
     spark.stop()
     println("Spark Session stopped.")

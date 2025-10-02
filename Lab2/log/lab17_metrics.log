@@ -1,9 +1,10 @@
 --- Performance Metrics ---
-Pipeline fitting duration: 2.74 seconds
-Data transformation duration: 0.96 seconds
-Actual vocabulary size (after preprocessing): 31355 unique terms
+Data reading duration: 4.44 seconds
+Pipeline fitting duration: 2.05 seconds
+Data transformation duration: 0.59 seconds
+Vocabulary size calculation duration: 0.36 seconds
+Actual vocabulary size (after preprocessing): 578 unique terms
 HashingTF numFeatures set to: 20000
-Note: numFeatures (20000) is smaller than actual vocabulary size (31355). Hash collisions are expected.
 Metrics file generated at: D:\NLP\Lab2\spark_labs\..\log\lab17_metrics.log
 
 For detailed stage-level metrics, view the Spark UI at http://localhost:4040 during execution.

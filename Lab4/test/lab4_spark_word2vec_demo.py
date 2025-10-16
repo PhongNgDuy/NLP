@@ -82,7 +82,8 @@ def main():
         log("Spark session stopped successfully.")
         log(f"Output saved to: {output_path}")
 
-    print(f"\n✅ Log saved successfully to: {output_path}")
+    print(f"\nLog saved successfully to: {output_path}")
 
 if __name__ == "__main__":
     main()
+

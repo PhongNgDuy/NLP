@@ -1,0 +1,23 @@
+============================================================
+Lab 4 - Spark Word2Vec Demonstration
+============================================================
+Loading dataset from: D:\NLP\data\c4-train.00000-of-01024-30K.json.gz
+Documents loaded: 30,000
+Total sentences: 30,000
+Total tokens: 10,609,694
+Average tokens per document: 353.66
+Training Spark Word2Vec model...
+Training completed successfully.
+Vocabulary size: 52,218
+============================================================
+Top 5 synonyms for 'computer':
+  desktop          0.6618
+  computers        0.6405
+  uwowned          0.6158
+  laptop           0.5870
+  firewalls        0.5867
+============================================================
+Spark Word2Vec demonstration completed.
+Stopping Spark session...
+Spark session stopped successfully.
+Output saved to: results\lab4_spark_output.txt

@@ -1,0 +1,38 @@
+Lab 4 - Custom Word2Vec Training
+============================================================
+Loading and preprocessing data...
+Training on 13,572 sentences.
+Duration: 0.85s (0.01 min)
+Vocabulary size: 8,384
+
+Model saved to: results\word2vec_ewt.model
+
+=== Model Demonstration ===
+
+Most similar to 'good':
+  nice        0.908
+  pretty      0.877
+  food        0.876
+
+Most similar to 'people':
+  those       0.888
+  places      0.854
+  other       0.853
+
+Most similar to 'go':
+  try         0.938
+  come        0.916
+  get         0.916
+
+Most similar to 'day':
+  week        0.929
+  first       0.903
+  time        0.881
+
+Analogy: man : woman :: king : ?
+  feathered   0.972
+  plastic     0.965
+  eei         0.962
+
+============================================================
+Total runtime: 0.91s

@@ -28,9 +28,9 @@
    - Bao gồm: `gensim`, `numpy`, `scipy`, `pyspark`
 2. Tải mô hình GloVe: Tự động tải khi chạy `WordEmbedder` lần đầu (khoảng 65MB).
 3. Cài đặt Apache Spark.
-5. Chuẩn bị dữ liệu:
-   - Đặt `en_ewt-ud-train.txt` vào `D:\NLP\data\UD_English-EWT\` (cập nhật đường dẫn nếu cần trong code).
-   - Đặt `c4-train.00000-of-01024-30K.json.gz` vào `D:\NLP\data\` (cập nhật đường dẫn nếu cần).
+4. Chuẩn bị dữ liệu:
+   - File `en_ewt-ud-train.txt` trong thư mục `D:\NLP\data\UD_English-EWT\`.
+   - File `c4-train.00000-of-01024-30K.json.gz` trong thư mục `D:\NLP\data\`.
 
 ## Kết quả
 ### Task 1: Embeddings

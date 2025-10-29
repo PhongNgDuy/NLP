@@ -1,0 +1,14 @@
+============================================================
+Lab 5 - Spark Sentiment Classification
+============================================================
+Loaded dataset from: D:\NLP\data\sentiments.csv
+Rows: 5791, Columns: 2
+After cleaning: 5791 samples remain.
+Word2Vec embedding created.
+Training completed successfully.
+Accuracy: 0.6979
+F1-score: 0.6800
+============================================================
+Spark Sentiment Classification completed.
+Spark session stopped successfully.
+Output saved to: d:\NLP\Lab5\results\lab5_sentiment_output.txt

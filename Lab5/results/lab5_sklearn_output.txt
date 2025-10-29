@@ -1,0 +1,13 @@
+============================================================
+Lab 5 - Task 1 & 2: Text Classification (Scikit-learn)
+============================================================
+Predictions: [1 1]
+
+Evaluation Results:
+Accuracy: 0.5000
+Precision: 0.5000
+Recall: 1.0000
+F1: 0.6667
+============================================================
+Text classification (sklearn) completed.
+Output saved to: d:\NLP\Lab5\results\lab5_sklearn_output.txt

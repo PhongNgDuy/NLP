@@ -16,8 +16,8 @@ NLP/Lab5/
 │ └── lab5_improvement_test.py # Task 3–4 – Spark LogisticRegression + Word2Vec
 │
 ├── results/
-│ ├── lab5_sklearn_output.txt # Kết quả baseline (TF-IDF)
-│ └── lab5_sentiment_output.txt # Kết quả cải tiến (Spark Word2Vec)
+│ ├── lab5_sklearn_output.txt # Kết quả baseline
+│ └── lab5_sentiment_output.txt # Kết quả cải tiến
 │
 NLP/ data/
 └── sentiments.csv # Dữ liệu dùng cho phần Spark
@@ -134,3 +134,4 @@ Dưới đây là bảng so sánh hiệu suất giữa hai mô hình, dựa trê
 
 * Tài liệu chính thức của [Scikit-learn](https://scikit-learn.org/stable/documentation.html).
 * Tài liệu chính thức của [Apache Spark MLlib](https://spark.apache.org/docs/latest/ml-guide.html).
+

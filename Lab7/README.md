@@ -29,6 +29,16 @@ pip install gensim tensorflow scikit-learn pandas numpy matplotlib
 
 ---
 
+## Công cụ và thư viện
+
+- **Python packages**:
+  - `pandas`: Xử lý dữ liệu
+  - `scikit-learn`: TF-IDF, Logistic Regression, LabelEncoder
+  - `gensim`: Word2Vec
+  - `tensorflow/keras`: Neural Networks, LSTM, Embeddings
+  - `numpy`: Tính toán số học
+  - `matplotlib`: Visualization
+
 ## Dataset
 
 - **Dataset**: HWU 
@@ -142,16 +152,6 @@ Các intent bao gồm:
    - Train Word2Vec trên training data
    - Tạo embedding matrix cho Keras Embedding layer
 
-## Công cụ và thư viện
-
-- **Python packages**:
-  - `pandas`: Xử lý dữ liệu
-  - `scikit-learn`: TF-IDF, Logistic Regression, LabelEncoder
-  - `gensim`: Word2Vec
-  - `tensorflow/keras`: Neural Networks, LSTM, Embeddings
-  - `numpy`: Tính toán số học
-  - `matplotlib`: Visualization
-
 ## So sánh kết quả
 
 | Mô hình | Test/Val Accuracy | F1-score (Macro) | Ghi chú |
@@ -183,10 +183,12 @@ Các intent bao gồm:
 
 - Thử nghiệm với các kiến trúc RNN khác: GRU, Bidirectional LSTM
 - Sử dụng pre-trained embeddings lớn hơn: GloVe, FastText, hoặc transformer-based embeddings
-- Tăng độ dài sequence nếu cần
+- Tăng độ dài sequence
 - Tinh chỉnh hyperparameters: learning rate, dropout, LSTM units
-- Thử các kỹ thuật regularization khác: batch normalization, layer normalization
-- Ensemble các mô hình để cải thiện performance
+- Thử nghiệm các kỹ thuật regularization khác: batch normalization, layer normalization
+
+**Labwork được hoàn thiện với sự hỗ trợ của ChatGPT 5 và Cursor agent**
+
 
 
 

@@ -84,7 +84,7 @@ Câu 5:
    Các nhóm lỗi chính:
    - Lỗi Tên riêng: Mô hình thường xuyên nhầm PROPN thành VERB hoặc NOUN (VD: google $\rightarrow$ VERB, watch $\rightarrow$ VERB).Nguyên nhân: Dữ liệu đầu vào viết thường toàn bộ (lowercase) làm mất dấu hiệu nhận biết tên riêng, mô hình dựa quá nhiều vào tần suất phổ biến của từ.
    - Lỗi nhập nhằng từ loại: Nhầm lẫn vai trò ngữ pháp trong cụm từ.VD: post (trong "post argues") là Chủ ngữ (NOUN) nhưng bị đoán là Động từ (VERB).VD: good (trong "good thing") là Tính từ (ADJ) nhưng bị đoán là Danh từ (NOUN).
-   - Lỗi từ mới:Các từ lạ hoặc ghép không chuẩn (VD: googleos) bị gán nhãn mặc định là danh từ chung thay vì tên riêng.
+   - Lỗi từ mới: Các từ lạ hoặc ghép không chuẩn (VD: googleos) bị gán nhãn mặc định là danh từ chung thay vì tên riêng.
 
 
 

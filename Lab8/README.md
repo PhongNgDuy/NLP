@@ -1,7 +1,7 @@
 # Lab 5 – RNN for POS Tagging
 
 ## 1. Mục tiêu
-- Xây dựng pipeline huấn luyện mô hình RNN (BiLSTM) để gán nhãn từ loại (POS tagging) theo yêu cầu trong `lab5_rnn_for_pos_tagging.pdf`.
+- Xây dựng pipeline huấn luyện mô hình RNN (BiLSTM) để gán nhãn từ loại (POS tagging).
 - Tự xử lý dữ liệu Universal Dependencies English-EWT (`.conllu`), xây từ vựng/tag set và sinh batch có padding.
 - Huấn luyện, đánh giá mô hình trên tập validation/test, trực quan hóa quá trình học và phân tích lỗi.
 
